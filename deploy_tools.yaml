@@ -1,0 +1,29 @@
+---
+- hosts: localhost
+  connection: local
+  
+  tasks:
+    - name: Ensure bin directory exists
+      file:
+        path: $HOME/bin
+        state: directory
+        mode: u+rwx,g+rx,o+rx
+
+    - name: Ensure bin directory in path
+      lineinfile:
+        dest: $HOME/.zshrc
+        line: 'export PATH=$PATH:$HOME/bin'
+        create: yes
+    
+    - name: Loop over the directories and copy the scripts to the bin directory
+      copy:
+        src: "{{ item }}"
+        dest: $HOME/bin
+        mode: u+rwx,g+rx,o+rx
+      with_fileglob:
+        - scripts/*.sh
+      register: copied_files
+
+    - name: Rename files to remove extension
+      command: mv "{{ item.dest }}" "{{ item.dest | regex_replace('\.sh$', '') }}"
+      with_items: "{{ copied_files.results }}"
