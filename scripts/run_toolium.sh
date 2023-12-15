@@ -98,14 +98,7 @@ function validate_execution_type() {
         get_version_from_jira $1
         validate_version $1
     fi
-}   
-
-# function jira_executions_params() {
-#     if [[ " ${EXECUTION_TYPE[@]} " =~ " ${1} " ]]; then
-#         read -p "Enter the version: " VERSION
-#         command_execution_type="-D Jira_enabled=true -D JiraExecution_version=$VERSION -D Jira_release_type=$1"
-#     fi
-# }
+}
 
 function get_version_from_jira() {
 
@@ -134,7 +127,6 @@ function get_version_from_jira() {
         fi
     done
     VERSION=${release_versions[${#release_versions[@]}-1]}
-    # command_execution_type="-D Jira_enabled=true -D JiraExecution_version=$VERSION -D Jira_release_type=$1"
 }
 
 function validate_version() {
