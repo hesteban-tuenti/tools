@@ -3,8 +3,8 @@
 BRANDS=(moves o2uk vivobr o2es o2de blaude)
 PLATFORMS=(android ios webapp)
 EXECUTION_TYPE=(HARDENING BER)
-ID="id04659"
-PASS="*2396ziomuo.MOV"
+ID="idxxxxxx"
+PASS="xxxxxx"
 
 declare -A APP_TITLES=(
     ["moves_android"]="Android Mi Movistar España internal enterprise"
