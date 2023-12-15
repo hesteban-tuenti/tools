@@ -27,3 +27,4 @@
     - name: Rename files to remove extension
       command: mv "{{ item.dest }}" "{{ item.dest | regex_replace('\.sh$', '') }}"
       with_items: "{{ copied_files.results }}"
+      when: item.changed
