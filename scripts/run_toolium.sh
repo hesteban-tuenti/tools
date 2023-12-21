@@ -98,7 +98,7 @@ function validate_execution_type() {
         get_version_from_jira $1
         validate_version $1
     fi
-}
+}   
 
 function get_version_from_jira() {
 

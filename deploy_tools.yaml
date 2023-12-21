@@ -14,7 +14,7 @@
         dest: $HOME/.zshrc
         line: 'export PATH=$PATH:$HOME/bin'
         create: yes
-    
+
     - name: Loop over the directories and copy the scripts to the bin directory
       copy:
         src: "{{ item }}"
@@ -25,6 +25,17 @@
       register: copied_files
 
     - name: Rename files to remove extension
-      command: mv "{{ item.dest }}" "{{ item.dest | regex_replace('\.sh$', '') }}"
+      command: cp "{{ item.dest }}" "{{ item.dest | regex_replace('\.sh$', '') }}"
       with_items: "{{ copied_files.results }}"
       when: item.changed
+
+    - name: Get playbook directory
+      debug:
+        var: playbook_dir
+
+    - name: Ensure repo is checkout via cron once a day
+      cron:
+        name: "Checkout tools repo"
+        minute: 0
+        hour: 0
+        job: "cd {{ playbook_dir }} && git pull"

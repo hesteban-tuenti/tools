@@ -10,12 +10,16 @@ function get_branch() {
 function remove_files_from_commit() {
     for file in "${FILES_TO_CHECKOUT[@]}"
     do
-        git reset HEAD $file
-        git checkout -- $file
+        git reset HEAD $file > /dev/null 2>&1
+        git checkout -- $file 2>/dev/null
+        if [ $? -ne 0 ]; then
+            echo "Nothing to checkout in: $file"
+            continue
+        fi
     done
 }
 
-function commit_added_files(){
+function commit_changed_files(){
     git add -u
     read -p "Commit message: " message
     git commit -m "$message"
@@ -27,5 +31,5 @@ function push_branch() {
 }
 
 remove_files_from_commit
-commit_added_files
+commit_changed_files
 push_branch
