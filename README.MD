@@ -1,4 +1,4 @@
-# Ansible Local Script Deployer
+# Ansible Tools Deployer
 
 ## Description
 
@@ -67,3 +67,8 @@ Just a wrapper of the git commit and push commands to avoid adding unwanted file
 It'll unstaged and checkout the files it they were modified and staged, and then commit and push, you won't have to add the remote branch manually.
 
 Notice that the command won't add untracked files for you, only modified files.
+
+
+* get_jira_ids:
+
+Just parse a file and returns de JQL query with the ids. This might be useful for bulk updates when deprecating scenarios for example.
