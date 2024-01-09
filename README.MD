@@ -68,7 +68,6 @@ It'll unstaged and checkout the files it they were modified and staged, and then
 
 Notice that the command won't add untracked files for you, only modified files.
 
-
 * get_jira_ids:
 
 Just parse a file and returns de JQL query with the ids. This might be useful for bulk updates when deprecating scenarios for example.
