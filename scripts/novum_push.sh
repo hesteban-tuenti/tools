@@ -1,20 +1,45 @@
 #!/usr/bin/env bash
+WORDIR=/Users/cx02522/workspace
 
-FILES_TO_CHECKOUT=(acceptance/settings/android-toolium.cfg acceptance/settings/ios-toolium.cfg acceptance/features/e2e/app/novum/_setup/setup.feature acceptance/features/e2e/web/novum/_setup/setup.feature)
+FILES_TO_KEEP=(acceptance/settings/android-toolium.cfg acceptance/settings/ios-toolium.cfg acceptance/features/e2e/app/novum/_setup/setup.feature acceptance/features/e2e/web/novum/_setup/setup.feature)
+
+function change_dir() {
+    cd $WORDIR/novum-tests
+}
 
 function get_branch() {
     branch=$(git rev-parse --abbrev-ref HEAD)
     echo "Branch: $branch"
 }
 
-function remove_files_from_commit() {
-    for file in "${FILES_TO_CHECKOUT[@]}"
+function get_staged_files() {
+    FILES_STAGED=($(git diff --cached --name-only))
+    echo "Staged files: ${FILES_STAGED[@]}"
+}
+
+function get_modified_files() {
+    FILES_MODIFIED=($(git status --porcelain | grep '^ M' | awk '{print $2}'))
+    echo "Modified files: ${FILES_MODIFIED[@]}"
+}
+
+function unstage_files_to_keep() {
+    for file in "${FILES_STAGED[@]}"
     do
-        git reset HEAD $file > /dev/null 2>&1
-        git checkout -- $file 2>/dev/null
-        if [ $? -ne 0 ]; then
-            echo "Nothing to checkout in: $file"
-            continue
+        echo "File: $file"
+        if [[ " ${FILES_TO_KEEP[@]} " =~ " ${file} " ]]; then
+            echo "Removing from stage file: $file"
+            git reset HEAD $file > /dev/null 2>&1
+        fi
+    done
+}
+
+function checkout_files_to_keep() {
+    for file in "${FILES_MODIFIED[@]}"
+    do
+        echo "File: $file"
+        if [[ " ${FILES_TO_KEEP[@]} " =~ " ${file} " ]]; then
+            echo "Checking out file: $file"
+            git checkout -- $file 2>/dev/null
         fi
     done
 }
@@ -30,6 +55,10 @@ function push_branch() {
     git push origin $branch
 }
 
-remove_files_from_commit
+change_dir
+get_modified_files
+get_staged_files
+unstage_files_to_keep
+checkout_files_to_keep
 commit_changed_files
 push_branch

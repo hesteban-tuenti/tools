@@ -6,6 +6,7 @@ def get_ids(filename):
     """Get ids from the file"""
     with open(filename, "r") as file:
         ids = findall(r".*(QANOV-\d*)", file.read())
+        print(f"Found {len(ids)} ids")
     return ids
 
 def generate_jira_query(ids):
