@@ -22,10 +22,11 @@
         mode: u+rwx,g+rx,o+rx
       with_fileglob:
         - scripts/*.sh
+        - scripts/*.py
       register: copied_files
 
     - name: Rename files to remove extension
-      command: cp "{{ item.dest }}" "{{ item.dest | regex_replace('\.sh$', '') }}"
+      command: cp "{{ item.dest }}" "{{ item.dest | regex_replace('\.sh$', '') | regex_replace('\.py$', '')}}"
       with_items: "{{ copied_files.results }}"
       when: item.changed
 
