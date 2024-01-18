@@ -49,7 +49,7 @@ Are you sure to launch toolium? (y/n)
 Run toolium for hardening/BER task:
 `run_toolium -f acceptance/settings/o2uk/cert0/runners/explore/android/postpay.json -t HARDENING/BER`
 
-The version will be retrieved automatically but can override it if needed it. To get the credentials you'll need
+The version will be retrieved automatically but can override it if needed it. To get the version you'll need
 to fill the credentials: ID, and PASS, or just the ID and the PASS will be prompted.
 ```
 Is it the correct version?: 24.0 (y/n) y
