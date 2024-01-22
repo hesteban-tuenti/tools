@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+WORDIR=/Users/xxxx
 BRANDS=(moves o2uk vivobr o2es o2de blaude)
 PLATFORMS=(android ios webapp)
 EXECUTION_TYPE=(HARDENING BER)
@@ -17,6 +17,9 @@ declare -A APP_TITLES=(
     ["blaude_ios"]="iOS Blau DE Enterprise Debuggable internal"
 )
 
+function change_dir() {
+    cd $WORDIR/novum-tests/acceptance
+}
 
 function show_help() {
   echo "  usage: run-toolium -f <runner> [-t <execution_type>]"
@@ -136,7 +139,6 @@ function validate_version() {
             read -p "Enter the version: " VERSION
             ;;
         * )
-        return 0
         ;; 
     esac
     command_execution_type="-D Jira_enabled=true -D JiraExecution_version=$VERSION -D Jira_release_type=$1"
@@ -165,6 +167,7 @@ function launch_toolium() {
     esac
 }
 
+change_dir
 parse_args "$@"
 is_webapp
 validate_brand
