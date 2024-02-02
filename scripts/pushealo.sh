@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-WORDIR=/Users/cx02522/workspace
+WORDIR=/Users/path_to_your_workdir
 
 FILES_TO_KEEP=(acceptance/settings/android-toolium.cfg acceptance/settings/ios-toolium.cfg acceptance/features/e2e/app/novum/_setup/setup.feature acceptance/features/e2e/web/novum/_setup/setup.feature)
 
