@@ -30,8 +30,10 @@ This Ansible project is designed to automate the deployment of various scripts t
 * run_toolium:
 
 A tool to run toolium command locally for the novum-test proyect.
-When running the toolium command you need to pass the user data according to the platform , app , the jira executions if needed.
+When running the toolium command you need to pass the user data according to the platform, app and the jira fields if needed.
 With this tool just pass the runner and the type of execution and that's it.
+
+Before using the tool set your workdir directory and the credentials
 
 Run toolium for testing purposes:
 `run_toolium -f acceptance/settings/o2uk/cert0/runners/explore/android/postpay.json`
@@ -61,12 +63,14 @@ Execution Type: HARDENING
 Version: 24.0
 Are you sure to launch toolium? (y/n)
 ```
-* novum_push:
+* pushealo:
 
-Just a wrapper of the git commit and push commands to avoid adding unwanted files , like the setup or the android/ios_toolium.cfg.
-It'll unstaged and checkout the files it they were modified and staged, and then commit and push, you won't have to add the remote branch manually.
+Just a wrapper of the git commit and push commands to avoid adding unwanted files, like the setup or the android/ios_toolium.cfg.
+It'll unstaged and checkout the files if they were modified and/or staged, and then commit and push the changes setting the remote branch automatically.
 
 Notice that the command won't add untracked files for you, only modified files.
+
+Before using the tool set your workdir directory
 
 * get_jira_ids:
 
