@@ -64,8 +64,11 @@ function commit_changed_files(){
 }
 
 function push_branch() {
-    get_branch
     git push origin $branch
+}
+
+function set_upstream() {
+     git branch --set-upstream-to=origin/$branch $branch
 }
 
 change_dir
@@ -78,3 +81,4 @@ unstage_files_to_keep
 checkout_files_to_keep
 commit_changed_files
 push_branch
+set_upstream
