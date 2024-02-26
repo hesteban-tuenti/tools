@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-WORDIR=/Users/xxxx
+WORDIR=<your_workdir>
 BRANDS=(moves o2uk vivobr o2es o2de blaude)
 PLATFORMS=(android ios webapp)
 EXECUTION_TYPE=(HARDENING BER)
-ID="idxxxxxx"
-PASS="xxxxxx"
+ID="<your_user_id>"
+PASS="<your_pass>"
 
 declare -A APP_TITLES=(
     ["moves_android"]="Android Mi Movistar España internal enterprise"
@@ -99,17 +99,14 @@ function validate_execution_type() {
         exit 1
     else
         get_version_from_jira $1
-        validate_version $1
+        validate_versions $1
     fi
 }   
 
 function get_version_from_jira() {
 
-    if [[ "${1}"  =~ "HARDENING" ]];then
-        regex="^[0-9]{1,2}\.[0-9]{1,2}$"
-    else
-        regex="^[0-9]{6}$"
-    fi
+    regex_app="^[0-9]{1,2}\.[0-9]{1,2}$"
+    regex_back="^[0-9]{6}(-b)?$"
     
     if [ -z "$PASS" ]; then
       read -s -p "Enter your pass: " PASS
@@ -123,25 +120,52 @@ function get_version_from_jira() {
         exit 1
     fi
     len=${#my_array[@]}
-    release_versions=()
+    app_release_versions=()
+    back_release_versions=()
     for version in "${my_array[@]}"; do
-        if [[ $version =~ $regex ]]; then
-            release_versions+=("$version")
+        if [[ $version =~ $regex_app ]]; then
+            app_release_versions+=("$version")
+        fi
+        if [[ $version =~ $regex_back ]]; then
+            back_release_versions+=("$version")
         fi
     done
-    VERSION=${release_versions[${#release_versions[@]}-1]}
+
+    if [[ "${1}"  =~ "HARDENING" ]];then
+      APP_VERSION=${app_release_versions[${#app_release_versions[@]}-1]}
+      BER_VERSION=""
+      JIRA_VERSION=$APP_VERSION
+
+    else
+      APP_VERSION=${app_release_versions[${#app_release_versions[@]}-2]}
+      BER_VERSION=${back_release_versions[${#back_release_versions[@]}-1]}
+      JIRA_VERSION=$BER_VERSION
+    fi
 }
 
-function validate_version() {
-    read -p "Is it the correct version?: $VERSION (y/n) " answer
+function validate_versions() {
+    read -p "Is it the correct JIRA version?: $JIRA_VERSION (y/n) " answer
     case ${answer:0:1} in
         n|N )
-            read -p "Enter the version: " VERSION
+            read -p "Enter the version: " JIRA_VERSION
             ;;
         * )
-        ;; 
+        ;;
     esac
-    command_execution_type="-D Jira_enabled=true -D JiraExecution_version=$VERSION -D Jira_release_type=$1"
+    command_execution_type="-D Jira_enabled=true -D JiraExecution_version=$JIRA_VERSION -D Jira_release_type=$1"
+
+    if [[ "${1}"  =~ "BER" ]] && [ $is_webapp -eq 1 ];then
+      read -p "Is this the correct build version?: $APP_VERSION (y/n) " answer
+      case ${answer:0:1} in
+        n|N )
+            read -p "Enter the build version: " APP_VERSION
+            ;;
+        * )
+        ;;
+      esac
+      command_execution_type+=" -D Appcenter_app_build=short_version:$APP_VERSION"
+    fi
+  echo "Command execution type: $command_execution_type"
 }
 
 function get_app(){
