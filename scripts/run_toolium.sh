@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-WORDIR=<your_workdir>
+WORDIR="<your_workdir>"
 BRANDS=(moves o2uk vivobr o2es o2de blaude)
 PLATFORMS=(android ios webapp)
 EXECUTION_TYPE=(HARDENING BER)

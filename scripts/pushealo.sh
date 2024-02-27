@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
-WORDIR=/Users/path_to_your_workdir
+WORDIR="<your_workdir>"
 
-FILES_TO_KEEP=(acceptance/settings/android-toolium.cfg acceptance/settings/ios-toolium.cfg acceptance/features/e2e/app/novum/_setup/setup.feature acceptance/features/e2e/web/novum/_setup/setup.feature)
+FILES_TO_KEEP=(
+    "acceptance/settings/android-toolium.cfg"
+    "acceptance/settings/ios-toolium.cfg"
+    "acceptance/features/e2e/app/novum/_setup/setup.feature"
+    "acceptance/features/e2e/web/novum/_setup/setup.feature"
+    "acceptance/settings/logging.conf"
+    )
 
 function change_dir() {
     cd $WORDIR/novum-tests
@@ -64,11 +70,18 @@ function commit_changed_files(){
 }
 
 function push_branch() {
-    git push origin $branch
+    git push
 }
 
 function set_upstream() {
-     git branch --set-upstream-to=origin/$branch $branch
+    git rev-parse --abbrev-ref --symbolic-full-name @{u} > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo "Upstream already set"
+        exit 0
+    else
+        echo "Setting upstream to: $branch"
+        git branch --set-upstream-to=origin/$branch $branch
+    fi
 }
 
 change_dir
@@ -80,5 +93,5 @@ fi
 unstage_files_to_keep
 checkout_files_to_keep
 commit_changed_files
-push_branch
 set_upstream
+push_branch
