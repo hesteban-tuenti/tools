@@ -70,7 +70,7 @@ function commit_changed_files(){
 }
 
 function push_branch() {
-    git push
+    git push -u origin $branch
 }
 
 function set_upstream() {
@@ -110,5 +110,4 @@ fi
 unstage_files_to_keep
 checkout_files_to_keep
 commit_changed_files
-set_upstream
 push_branch

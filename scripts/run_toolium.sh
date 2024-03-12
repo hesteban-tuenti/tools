@@ -21,6 +21,10 @@ function change_dir() {
     cd $WORDIR/novum-tests/acceptance
 }
 
+function set_pythonpath() {
+    export PYTHONPATH=$WORDIR/novum-tests
+}
+
 function show_help() {
   echo "  usage: run-toolium -f <runner> [-t <execution_type>]"
   exit 1
@@ -192,6 +196,7 @@ function launch_toolium() {
 }
 
 change_dir
+set_pythonpath
 parse_args "$@"
 is_webapp
 validate_brand
