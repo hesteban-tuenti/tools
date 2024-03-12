@@ -14,11 +14,15 @@ This Ansible project is designed to automate the deployment of various scripts t
 ### Installing
 
 * Clone the repository to your local machine.
-* Install Ansible if not already installed:
-  ```shell
-  sudo apt update
-  sudo apt install ansible
-  ```
+* Create a venv and install the requirements with ansible dependencies (you can use the venv created during the mac installation):
+```
+python3 -m venv ansible-venv
+source ansible-venv/bin/activate
+pip3 install --upgrade pip
+pip3 install -r requirements.txt
+
+or use pyenv or your favorite method
+```
 
 ### Executing
 
