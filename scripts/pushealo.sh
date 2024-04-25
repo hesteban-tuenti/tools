@@ -84,23 +84,17 @@ function set_upstream() {
     fi
 }
 
-function check_lint() {
-    echo "Checking Ruff lint"
-    python3 -m ruff check --output-format github .
+function check_pre_commit() {
+    echo "Checking pre-commit hooks"
+    pre-commit run
     if [ $? -eq 1 ]; then
-        echo "Check ruff errors"
-        exit 1
-    fi
-    echo "Checking Yaml lint"
-    python3 -m yamllint --format github .
-    if [ $? -eq 1 ]; then
-        echo "Check yamlint errors"
+        echo "Check pre-commit errors"
         exit 1
     fi
 }
 
 
-check_lint
+check_pre_commit
 change_dir
 get_modified_files
 get_staged_files
