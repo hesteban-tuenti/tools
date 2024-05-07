@@ -70,19 +70,16 @@ function commit_changed_files(){
 }
 
 function push_branch() {
-    git push -u origin $branch
-}
-
-function set_upstream() {
     git rev-parse --abbrev-ref --symbolic-full-name @{u} > /dev/null 2>&1
     if [ $? -eq 0 ]; then
         echo "Upstream already set"
-        exit 0
+        git push
     else
-        echo "Setting upstream to: $branch"
-        git branch --set-upstream-to=origin/$branch $branch
+        echo "Setting upstream to: $branch and pushing to origin"
+        git push --set-upstream origin $branch
     fi
 }
+
 
 function check_pre_commit() {
     echo "Checking pre-commit hooks"
@@ -93,7 +90,7 @@ function check_pre_commit() {
     fi
 }
 
-
+get_branch
 check_pre_commit
 change_dir
 get_modified_files
