@@ -2,7 +2,7 @@
 WORDIR="<your_workdir>"
 BRANDS=(moves o2uk vivobr o2es o2de blaude)
 PLATFORMS=(android ios webapp)
-EXECUTION_TYPE=(HARDENING BER)
+EXECUTION_TYPE=(HAR BER)
 ID="<your_user_id>"
 PASS="<your_pass>"
 
@@ -135,7 +135,7 @@ function get_version_from_jira() {
         fi
     done
 
-    if [[ "${1}"  =~ "HARDENING" ]];then
+    if [[ "${1}"  =~ "HAR" ]];then
       APP_VERSION=${app_release_versions[${#app_release_versions[@]}-1]}
       BER_VERSION=""
       JIRA_VERSION=$APP_VERSION

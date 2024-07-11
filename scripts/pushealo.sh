@@ -6,7 +6,10 @@ FILES_TO_KEEP=(
     "acceptance/settings/ios-toolium.cfg"
     "acceptance/features/e2e/app/novum/_setup/setup.feature"
     "acceptance/features/e2e/web/novum/_setup/setup.feature"
+    "acceptance/features/e2e/app/novum/_setup/har_setup.feature"
     "acceptance/settings/logging.conf"
+    "acceptance/resources/web_driver_agent"
+    "acceptance/resources/users_data"
     )
 
 function change_dir() {
@@ -64,7 +67,6 @@ function checkout_files_to_keep() {
 
 function commit_changed_files(){
     echo "Committing changes"
-    git add -u
     read -p "Commit message: " message
     git commit -m "$message"
 }
@@ -82,6 +84,9 @@ function push_branch() {
 
 
 function check_pre_commit() {
+    get_modified_files
+    git add -u
+    get_modified_files
     echo "Checking pre-commit hooks"
     pre-commit run
     if [ $? -eq 1 ]; then
@@ -90,9 +95,8 @@ function check_pre_commit() {
     fi
 }
 
-get_branch
-check_pre_commit
 change_dir
+get_branch
 get_modified_files
 get_staged_files
 if [ $staged ]; then
@@ -100,5 +104,6 @@ if [ $staged ]; then
 fi
 unstage_files_to_keep
 checkout_files_to_keep
+check_pre_commit
 commit_changed_files
 push_branch
