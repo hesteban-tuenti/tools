@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import argparse
 import json
@@ -7,7 +8,7 @@ WORKDIR = "<your_workdir>"
 # user args parse to read the feature file
 parser = argparse.ArgumentParser()
 
-parser.add_argument("new", help="new feature file to add add")
+parser.add_argument("new", help="new feature file to add")
 parser.add_argument("-a", "--after", help="feature file to add it after")
 parser.add_argument("-d", "--directory", help="directory to restrict the search for runners")
 
