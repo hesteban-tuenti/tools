@@ -7,6 +7,8 @@ FILES_TO_KEEP=(
     "acceptance/features/e2e/app/novum/_setup/setup.feature"
     "acceptance/features/e2e/web/novum/_setup/setup.feature"
     "acceptance/features/e2e/app/novum/_setup/har_setup.feature"
+    "acceptance/features/e2e/app/novum/_setup/har_no_login_setup.feature"
+    "acceptance/behave.ini"
     "acceptance/settings/logging.conf"
     "acceptance/resources/web_driver_agent"
     "acceptance/resources/users_data"
@@ -95,7 +97,21 @@ function check_pre_commit() {
     fi
 }
 
+function check_features() {
+    echo $1
+    if [[ "${1}"  =~ "features" ]];then
+        echo "pwd: $(pwd)"
+        echo "Checking features"
+        ./scripts/features.sh true
+        if [ $? -eq 1 ]; then
+        echo "Check features errors"
+        exit 1
+    fi
+    fi
+}
+
 change_dir
+check_features $1
 get_branch
 get_modified_files
 get_staged_files

@@ -15,6 +15,10 @@ declare -A APP_TITLES=(
     ["vivobr_ios"]="iOS Meu Vivo Movel Enterprise Debuggable internal"
     ["blaude_android"]="Android Internal Blau DE Enterprise"
     ["blaude_ios"]="iOS Blau DE Enterprise Debuggable internal"
+    ["o2es_android"]="Android Mi O2 España internal enterprise"
+    ["o2es_ios"]="iOS Mi O2 España Enterprise Debuggable internal"
+    ["o2de_android"]="Android O2 DE internal enterprise"
+    ["o2de_ios"]="iOS O2 DE Enterprise Debuggable internal"
 )
 
 function change_dir() {
@@ -26,7 +30,7 @@ function set_pythonpath() {
 }
 
 function show_help() {
-  echo "  usage: run-toolium -f <runner> [-t <execution_type>]"
+  echo "  usage: run-toolium -f <runner> [-t <execution_type>] [android|ios]"
   exit 1
 }
 
@@ -45,7 +49,7 @@ function parse_args() {
         execution_type="$1"
         ;;
       *)
-        other_args+=("$1")
+        other_args+="$1"
         ;;
     esac
     shift
@@ -54,6 +58,13 @@ function parse_args() {
     echo "Please set the runner as param with: -f or --runner"
     show_help
     exit 1
+  fi
+
+  # android or a OR ios or i
+  if [[ $other_args =~ "android" ]]; then
+    mobile_platform="android"
+  elif [[ $other_args =~ "ios" ]]; then
+    mobile_platform="ios"
   fi
 }
 
@@ -83,8 +94,14 @@ function validate_platform() {
     for platform in "${PLATFORMS[@]}"
     do
     result=`echo $runner | sed -n "/\/$platform-*./p" `
+    
     if [ -n "$result" ] && [ $is_webapp -eq 1 ]; then
-            command_platform="-D toolium_env=$platform"
+        if [ -z "$mobile_platform" ]; then
+            echo "For mobile execution you need to add the platform as param"
+            show_help
+            exit 1
+        fi
+            command_platform="-D toolium_env=$mobile_platform"
             return 0
     elif [ -n "$result" ] && [ $is_webapp -eq 0 ]; then
             command_platform="-D toolium_env=webapp_local"
@@ -187,6 +204,7 @@ function launch_toolium() {
         y|Y )
             echo "Launching toolium..."
             eval  "toolium behave-runner -j -f $runner $command_platform $command_app $command_execution_type"
+            # echo "toolium behave-runner -j -f $runner $command_platform $command_app $command_execution_type"
             ;;
         * )
             echo "Exiting..."
@@ -204,5 +222,5 @@ validate_platform
 if [ -n "$execution_type" ]; then
     validate_execution_type $execution_type
 fi
-get_app $brand $platform
+get_app $brand $mobile_platform
 launch_toolium
